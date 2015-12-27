@@ -1,0 +1,56 @@
+```{r echo=FALSE}
+library(plyr)
+library(dplyr)
+library(lubridate)
+library(knitr)
+library(ggplot2)
+library(viridis)
+```
+Weather Exporer
+========================================================
+author: Thom Savela
+date: 12/24/2015
+
+About the Siny Application
+========================================================
+
+This application helps users visualize weather data
+
+- Multiple varialbes can explored
+- Data from various locations 
+- Rolling averages
+- A time range option will be added in future release
+
+Sample data: Saint Petersburg FL
+========================================================
+
+```{r echo=FALSE}
+    wx_data = read.csv('data/oct_2015_weather.csv')
+    wx_data <- mutate(wx_data, 
+                      time = ymd_hms(time),
+                      areaDescription = as.character(areaDescription)
+    )
+    d <- filter(wx_data, areaDescription=='Saint Petersburg FL')
+    kable(head(select(d, -areaDescription, -metar ), n=4))
+
+```
+
+Sample Chart
+========================================================
+
+```{r, echo=FALSE, warnings=FALSE, dpi=300, fig.width=16, fig.height=8,out.width='900px', out.height='500px'}
+
+p <- ggplot(data=wx_data) 
+p <- p + geom_point(alpha=.4, aes(time,Temperature, color=Temperature), size=1) 
+p <- p + facet_wrap( ~ areaDescription, ncol=5) 
+p <- p + scale_color_gradientn(colours = viridis(24))
+p <- p + theme(axis.text.x = element_text(angle = 45))
+p
+```
+
+Links
+========================================================
+
+* Data is collected via a [Spluk App](https://github.com/thomrs7/weather_station).
+* The final apps code is on [github](https://github.com/thomrs7/data_products).
+* A working demo can be found [here](https://thomrs7.shinyapps.io/data_products).
