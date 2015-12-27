@@ -1,5 +1,5 @@
 
-Weather Exporer
+Weather Explorer
 ========================================================
 author: Thom Savela
 date: 12/24/2015
